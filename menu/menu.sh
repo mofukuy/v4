@@ -113,7 +113,6 @@ fi
 clear
 
 MYIP=$(curl -sS ipv4.icanhazip.com)
-echo "Checking VPS"
 #########################
 
 # Color Validation
@@ -326,7 +325,7 @@ echo -e "\e[36m╘════════════════════�
  [\033[1;36m10\033[0m] Gen cert SSL       [\033[1;36m15\033[0m] \033[1;33mSEtting Auto Reboot${NC}
  [\033[1;36m11\033[0m] Cek Status \033[1;32mRUNNING${NC} [\033[1;36m16\033[0m] Cek Pkt bulanan
  [\033[1;36m12\033[0m] Reboot VPS \033[1;36mX-Ray${NC}   [\033[1;36m17\033[0m] Cek Pkt \033[1;33mHarian${NC}
- [\033[1;36m13\033[0m] Restart VPS        [\033[1;36m18\033[0m] Cek Info \033[1;33mVPS${NC}
+ [\033[1;36m13\033[0m] Restart VPS        [\033[1;36m18\033[0m] Keluar \033[1;33mVPS${NC}
 "
 echo -e   " \033[1;33m Press x or [ Ctrl+C ] • To-Exit-Script ${NC}"
 echo -e  "\e[36m╒════════════════════════════════════════════════╕\033[0m"
@@ -348,13 +347,13 @@ case $opt in
 8) clear ; menu-trojan ;;
 9) clear ; menu-set ;;
 10) clear ; certv2ray ;;
-11) clear ; run ;;
+11) clear ; status ;;
 12) clear ; reboot ;;
 13) clear ; restart ;;
 14) clear ; passwd ;;
 15) clear ; jam ;;
 16) clear ; vnstat ;;
 17) clear ; vnstat -d ;;
-18) clear ; about ;;
+18) clear ; exit ;;
 x) exit ;;
 esac
