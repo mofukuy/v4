@@ -315,6 +315,9 @@ wget -O acs-set "https://raw.githubusercontent.com/artanodrop/v4/main/acs-set.sh
 
 wget -O sshws "https://raw.githubusercontent.com/artanodrop/v4/main/ssh/sshws.sh"
 wget -O status "https://raw.githubusercontent.com/artanodrop/v4/main/status.sh"
+wget -O run "https://raw.githubusercontent.com/fikripps/v4/main/run.sh"
+wget -O jam "https://raw.githubusercontent.com/fikripps/v4/main/jam.sh"
+
 
 chmod +x menu
 chmod +x menu-vmess
@@ -355,6 +358,8 @@ chmod +x xp
 chmod +x acs-set
 chmod +x sshws
 chmod +x status
+chmod +x run
+chmod +x jam
 cd
 
 
