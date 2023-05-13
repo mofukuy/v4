@@ -1,9 +1,60 @@
 #!/bin/bash
-# User Trial SSH / OPENVPN
-# Edition : Stable Edition V1.0
-# Auther  : AWALUDIN FERIYANTO
-# (C) Copyright 2021-2022 By FSIDVPN
-# =========================================
+BURIQ () {
+    curl -sS https://raw.githubusercontent.com/Fikripps/permission/main/ipmini > /root/tmp
+    data=( `cat /root/tmp | grep -E "^### " | awk '{print $2}'` )
+    for user in "${data[@]}"
+    do
+    exp=( `grep -E "^### $user" "/root/tmp" | awk '{print $3}'` )
+    d1=(`date -d "$exp" +%s`)
+    d2=(`date -d "$biji" +%s`)
+    exp2=$(( (d1 - d2) / 86400 ))
+    if [[ "$exp2" -le "0" ]]; then
+    echo $user > /etc/.$user.ini
+    else
+    rm -f /etc/.$user.ini > /dev/null 2>&1
+    fi
+    done
+    rm -f /root/tmp
+}
+
+MYIP=$(curl -sS ipv4.icanhazip.com)
+Name=$(curl -sS https://raw.githubusercontent.com/Fikripps/permission/main/ipmini | grep $MYIP | awk '{print $2}')
+echo $Name > /usr/local/etc/.$Name.ini
+CekOne=$(cat /usr/local/etc/.$Name.ini)
+
+Bloman () {
+if [ -f "/etc/.$Name.ini" ]; then
+CekTwo=$(cat /etc/.$Name.ini)
+    if [ "$CekOne" = "$CekTwo" ]; then
+        res="Expired"
+    fi
+else
+res="Permission Accepted..."
+fi
+}
+
+PERMISSION () {
+    MYIP=$(curl -sS ipv4.icanhazip.com)
+    IZIN=$(curl -sS https://raw.githubusercontent.com/Fikripps/permission/main/ipmini | awk '{print $4}' | grep $MYIP)
+    if [ "$MYIP" = "$IZIN" ]; then
+    Bloman
+    else
+    res="Permission Denied!"
+    fi
+    BURIQ
+}
+red='\e[1;31m'
+green='\e[1;32m'
+NC='\e[0m'
+green() { echo -e "\\033[32;1m${*}\\033[0m"; }
+red() { echo -e "\\033[31;1m${*}\\033[0m"; }
+PERMISSION
+
+if [ "$res" = "Expired" ]; then
+Exp="\e[36mExpired\033[0m"
+else
+Exp=$(curl -sS https://raw.githubusercontent.com/Fikripps/permission/main/ipmini | grep $MYIP | awk '{print $3}')
+fi
 
 # // Exporting Language to UTF-8
 export LC_ALL='en_US.UTF-8'
@@ -20,94 +71,6 @@ export PURPLE='\033[0;35m'
 export CYAN='\033[0;36m'
 export LIGHT='\033[0;37m'
 export NC='\033[0m'
-
-# // Export Banner Status Information
-export EROR="[${RED} EROR ${NC}]"
-export INFO="[${YELLOW} INFO ${NC}]"
-export OKEY="[${GREEN} OKEY ${NC}]"
-export PENDING="[${YELLOW} PENDING ${NC}]"
-export SEND="[${YELLOW} SEND ${NC}]"
-export RECEIVE="[${YELLOW} RECEIVE ${NC}]"
-
-# // Export Align
-export BOLD="\e[1m"
-export WARNING="${RED}\e[5m"
-export UNDERLINE="\e[4m"
-
-# // Exporting URL Host
-export Server_URL="raw.githubusercontent.com/fikripps/prokontrol/main"
-export Server_Port="443"
-export Server_IP="underfined"
-export Script_Mode="Stable"
-export Auther="FsidVPN"
-
-# // Root Checking
-if [ "${EUID}" -ne 0 ]; then
-		echo -e "${EROR} Please Run This Script As Root User !"
-		exit 1
-fi
-
-# // Exporting IP Address
-export IP=$( curl -s https://ipinfo.io/ip/ )
-
-# // License Key Detail
-export Tanggal_Pembelian_License=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $License_Key | cut -d ' ' -f 3 | tr -d '\r' | tr -d '\r\n')
-export Nama_Issued_License=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $License_Key | cut -d ' ' -f 9-100 | tr -d '\r' | tr -d '\r\n')
-export Masa_Laku_License_Berlaku_Sampai=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $License_Key | cut -d ' ' -f 4 | tr -d '\r' | tr -d '\r\n')
-export Install_Limit=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $License_Key | cut -d ' ' -f 2 | tr -d '\r' | tr -d '\r\n')
-export Tipe_License=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $License_Key | cut -d ' ' -f 8 | tr -d '\r' | tr -d '\r\n')
-
-# // Exporting Network Interface
-export NETWORK_IFACE="$(ip route show to default | awk '{print $5}')"
-
-# // Validate Result ( 1 )
-touch /etc/${Auther}/license.key
-export Your_License_Key="$( cat /etc/${Auther}/license.key | awk '{print $1}' )"
-export Validated_Your_License_Key_With_Server="$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $Your_License_Key | head -n1 | cut -d ' ' -f 1 )"
-if [[ "$Validated_Your_License_Key_With_Server" == "$Your_License_Key" ]]; then
-    validated='true'
-else
-    echo -e "${EROR} License Key Not Valid"
-    exit 1
-fi
-
-# // Checking VPS Status > Got Banned / No
-if [[ $IP == "$( curl -s https://${Server_URL}/blacklist.txt | cut -d ' ' -f 1 | grep -w $IP | head -n1 )" ]]; then
-    echo -e "${EROR} 403 Forbidden ( Your VPS Has Been Banned )"
-    exit  1
-fi
-
-# // Checking VPS Status > Got Banned / No
-if [[ $Your_License_Key == "$( curl -s https://${Server_URL} | cut -d ' ' -f 1 | grep -w $Your_License_Key | head -n1)" ]]; then
-    echo -e "${EROR} 403 Forbidden ( Your License Has Been Limited )"
-    exit  1
-fi
-
-# // Checking VPS Status > Got Banned / No
-if [[ 'Standart' == "$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $Your_License_Key | head -n1 | cut -d ' ' -f 8 )" ]]; then 
-    License_Mode='Standart'
-elif [[ Pro == "$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $Your_License_Key | head -n1 | cut -d ' ' -f 8 )" ]]; then 
-    License_Mode='Pro'
-else
-    echo -e "${EROR} Please Using Genuine License !"
-    exit 1
-fi
-
-# // Checking Script Expired
-Isadmin=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $Your_License_Key | cut -d ' ' -f 8 )
-Nama=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $Your_License_Key | cut -d ' ' -f 9-100 )
-exp=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $Your_License_Key | cut -d ' ' -f 4 )
-now=`date -d "0 days" +"%Y-%m-%d"`
-expired_date=$(date -d "$exp" +%s)
-now_date=$(date -d "$now" +%s)
-sisa_hari=$(( ($expired_date - $now_date) / 86400 ))
-if [[ $sisa_hari -lt 0 ]]; then
-    echo $sisa_hari > /etc/${Auther}/license-remaining-active-days.db
-    echo -e "${EROR} Your License Key Expired ( $sisa_hari Days )"
-    exit 1
-else
-    echo $sisa_hari > /etc/${Auther}/license-remaining-active-days.db
-fi
 
 # // Clear
 clear
@@ -135,17 +98,6 @@ LIGHT='\033[0;37m'
 # VPS Information
 #Domain
 domain=$(cat /etc/xray/domain)
-#Status certificate
-modifyTime=$(stat $HOME/.acme.sh/${domain}_ecc/${domain}.key | sed -n '7,6p' | awk '{print $2" "$3" "$4" "$5}')
-modifyTime1=$(date +%s -d "${modifyTime}")
-currentTime=$(date +%s)
-stampDiff=$(expr ${currentTime} - ${modifyTime1})
-days=$(expr ${stampDiff} / 86400)
-remainingDays=$(expr 90 - ${days})
-tlsStatus=${remainingDays}
-if [[ ${remainingDays} -le 0 ]]; then
-	tlsStatus="expired"
-fi
 # OS Uptime
 uptime="$(uptime -p | cut -d " " -f 2-10)"
 # Download
@@ -329,9 +281,9 @@ echo -e "\e[36m╘════════════════════�
 "
 echo -e   " \033[1;33m Press x or [ Ctrl+C ] • To-Exit-Script ${NC}"
 echo -e  "\e[36m╒════════════════════════════════════════════════╕\033[0m"
-echo -e "\e[36m│ Client Name :$NC \033[1;32m$Nama ${NC}"
-echo -e "\e[36m│ User Roles  :${NC} \033[1;32m$uis ${NC}"
-    echo -e "\e[36m│ Exp License :$NC \033[1;32m$sisa_hari ${NC}Days Tersisa"
+echo -e "\e[36m│ Client Name :$NC \033[1;32m$Name ${NC}"
+echo -e "\e[36m│ User Roles  :${NC} \033[1;32mPremium ${NC}"
+    echo -e "\e[36m│ Exp License :$NC \033[1;32m$Exp ${NC}Days Tersisa"
 echo -e "\e[36m╘════════════════════════════════════════════════╛\033[0m"
 echo -e   ""
 read -p " Select menu :  "  opt
