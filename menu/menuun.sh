@@ -263,6 +263,13 @@ echo -e "\e[33m Isp Name             \e[0m: \033[1;32m $ISP ${NC}"
 echo -e "\e[33m Domain               \e[0m: \033[1;36m $domain ${NC}"	
 echo -e "\e[33m Ip Vps               \e[0m: \033[1;36m $IPVPS ${NC}"	
 echo -e "${CYAN}╘━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╛\033[0m${NC}"
+echo -e "${GREEN}┌─────────────────────────────────────────────────────────────┐${NC}"
+
+echo -e "${GREEN}│  \033[0m ${BOLD}${YELLOW}SSH     VMESS       VLESS      TROJAN       SHADOWSOCKS$NC  $COLOR1"
+
+echo -e "${GREEN}│  \033[0m ${Blue} $ssh1        $vma           $vla          $tra               $ssa   $NC"
+
+echo -e "${GREEN}└─────────────────────────────────────────────────────────────┘${NC}"
 echo -e "${CYAN}╒━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╕\033[0m${NC}"
 echo -e " \E[44;1;39m                 • SCRIPT MENU •                \E[0m"
 echo -e "${CYAN}╘━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╛\033[0m${NC}"
